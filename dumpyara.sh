@@ -115,7 +115,7 @@ else
     fi
 fi
 
-ORG=AndroidDumps #your GitHub org name
+ORG=jun10r4lm31d4 #your GitHub org name
 EXTENSION=$(echo "${INPUT##*.}" | inline-detox)
 UNZIP_DIR=$(basename ${INPUT/.$EXTENSION/})
 WORKING=${PWD}/working/${UNZIP_DIR}
@@ -136,7 +136,7 @@ if [[ -d "${PWD}/external/Firmware_extractor" ]]; then
     git -C "${PWD}"/external/Firmware_extractor pull --recurse-submodules --rebase
 else
     LOGI "Cloning 'Fimrware_extractor' to 'external/'..."
-    git clone -q --recurse-submodules https://github.com/AndroidDumps/Firmware_extractor "${PWD}"/external/Firmware_extractor
+    git clone -q --recurse-submodules https://github.com/jun10r4lm31d4/Firmware_extractor "${PWD}"/external/Firmware_extractor
 fi
 
 # Extract input via 'Firmware_extractor'
