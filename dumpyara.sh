@@ -171,17 +171,11 @@ LOGI "Extracting partitions..."
 for partition in "${PARTITIONS[@]}"; do
     # Proceed only if the image from 'PARTITIONS' array exists
     if [[ -f "${partition}".img ]]; then
+        LOGI "Extracting partition '${partition}'"
         # Try to extract file through '7z'
         ${FSCK_EROFS} --extract="${partition}" "${partition}".img >> /dev/null 2>&1 || {
                 # Try to extract file through '7z'
-                7z -snld x "${partition}".img -y -o"${partition}"/ > /dev/null || {
-                LOGE "'${partition}' extraction via '7z' failed."
-
-                # Only abort if we're at the first occourence
-                if [[ "${partition}" == "${PARTITIONS[0]}" ]]; then
-                    LOGF "Aborting dumping considering it's a crucial partition."
-                fi
-            }
+                7z -snld x "${partition}".img -y -o"${partition}"/ > /dev/null
         }
 
         # Clean-up
