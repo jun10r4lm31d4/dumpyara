@@ -171,17 +171,11 @@ LOGI "Extracting partitions..."
 for partition in "${PARTITIONS[@]}"; do
     # Proceed only if the image from 'PARTITIONS' array exists
     if [[ -f "${partition}".img ]]; then
+        LOGI "Extracting partition '${partition}'"
         # Try to extract file through '7z'
         ${FSCK_EROFS} --extract="${partition}" "${partition}".img >> /dev/null 2>&1 || {
                 # Try to extract file through '7z'
-                7z -snld x "${partition}".img -y -o"${partition}"/ > /dev/null || {
-                LOGE "'${partition}' extraction via '7z' failed."
-
-                # Only abort if we're at the first occourence
-                if [[ "${partition}" == "${PARTITIONS[0]}" ]]; then
-                    LOGF "Aborting dumping considering it's a crucial partition."
-                fi
-            }
+                7z -snld x "${partition}".img -y -o"${partition}"/ > /dev/null
         }
 
         # Clean-up
@@ -462,12 +456,6 @@ description=$(rg -m1 -INoP --no-messages "(?<=^ro.build.description=).*" {system
 [[ -z ${description} ]] && description=$(rg -m1 -INoP --no-messages "(?<=^ro.product.build.description=).*" product/build*.prop)
 [[ -z ${description} ]] && description=$(rg -m1 -INoP --no-messages "(?<=^ro.system.build.description=).*" {system,system/system}/build*.prop)
 [[ -z ${description} ]] && description="$flavor $release $id $incremental $tags"
-
-# Generate dummy device tree
-mkdir -p "${WORKING}/aosp-device-tree"
-LOGI "Generating dummy device tree..."
-uvx aospdtgen . --output "${WORKING}/aosp-device-tree" >> /dev/null 2>&1 || \
-    LOGE "Failed to generate AOSP device tree" && rm -rf "${WORKING}/aosp-device-tree"
 
 is_ab=$(grep -oP "(?<=^ro.build.ab_update=).*" -hs {system,system/system,vendor}/build*.prop | head -1)
 [[ -z "${is_ab}" ]] && is_ab="false"
