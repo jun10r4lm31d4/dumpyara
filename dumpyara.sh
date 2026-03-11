@@ -186,13 +186,9 @@ done
 # Also extract 'fsg.mbn' from 'radio.img'
 if [ -f "fsg.mbn" ]; then
     LOGI "Extracting 'fsg.mbn' via '7zz'..."
-    mkdir "radio/fsg"
 
     # Thankfully, 'fsg.mbn' is a simple EXT2 partition
     7zz -snld x "fsg.mbn" -o"radio/fsg" > /dev/null
-
-    # Remove 'fsg.mbn'
-    rm -rf "fsg.mbn"
 fi
 
 # Extract and decompile device-tree blobs
